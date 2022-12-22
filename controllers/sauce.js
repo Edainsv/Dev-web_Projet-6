@@ -1,18 +1,35 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
+const Joi = require('joi'); // Contrôle les champs entrés dans les formulaires.
 
 exports.createSauce = (req, res, next) => {
-    const sauceObject = JSON.parse(req.body.sauce);
-    const sauce = new Sauce({
-        ...sauceObject,
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, // Génère l'url
-        likes: 0,
-        dislikes: 0
+    // Vérifie la saisie du formulaire de création de sauce selon le schéma suivant.
+    const schema = Joi.object().keys({
+        userId:         Joi.string().required(),
+        name:           Joi.string().min(3).max(40).required(),
+        manufacturer:   Joi.string().min(2).max(30).required(),
+        description:    Joi.string().min(5).max(100).required(),
+        mainPepper:     Joi.string().min(3).max(30).required(),
+        heat:           Joi.number().required()
     });
 
-    sauce.save()
-     .then(() => res.status(201).json({ message: 'Sauce créée !' }))
-     .catch((error) => res.status(400).json({ error }));
+    // Si erreur, on retour l'ererur.
+    if (schema.validate(JSON.parse(req.body.sauce)).error) {
+        res.send(schema.validate(JSON.parse(req.body.sauce)).error.details);
+    } else { // Sinon on ajoute la sauce
+        const sauceObject = JSON.parse(req.body.sauce);
+
+        const sauce = new Sauce({
+            ...sauceObject,
+            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, // Génère l'url
+            likes: 0,
+            dislikes: 0
+        });
+
+        sauce.save()
+         .then(() => res.status(201).json({ message: 'Sauce créée !' }))
+         .catch((error) => res.status(400).json({ error }));
+    }
 };
 
 exports.getAllSauce = (req, res, next) => {
