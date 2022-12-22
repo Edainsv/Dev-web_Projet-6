@@ -3,8 +3,10 @@ const router = express.Router();
 
 const userCtrl = require('../controllers/user');
 const password = require('../middleware/password-config');
+const email = require('../middleware/email-config');
 
-router.post('/signup', password, userCtrl.signup);
+
+router.post('/signup', password, email, userCtrl.signup);
 router.post('/login', userCtrl.login);
 
 

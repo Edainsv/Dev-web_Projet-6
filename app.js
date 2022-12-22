@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -8,7 +9,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect('mongodb+srv://Edains:pcM77PYYd1miOPI9@cluster0.fditcwk.mongodb.net/?retryWrites=true&w=majority', {
+
+mongoose.connect(`mongodb+srv://Edains:${process.env.MONGOOSE_PASSWORD}@cluster0.fditcwk.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
