@@ -88,9 +88,8 @@ exports.likeOrDislike = (req, res, next) => {
      .then((sauce) => {
         let like = req.body.like;
 
-        switch (like) {
-        // Aujoute un Like
-        case 1:
+        switch (like) {        
+        case 1: // Aujoute un Like
             // Si pas de like on ajoute
             if (!sauce.usersLiked.includes(req.body.userId)) {
                 sauce.usersLiked.push(req.body.userId);
@@ -98,8 +97,7 @@ exports.likeOrDislike = (req, res, next) => {
             }
             break;
 
-        // Ajoute un Dislike
-        case -1:
+        case -1:// Ajoute un Dislike
             // Si pas de dislike on ajoute
             if (!sauce.usersLiked.includes(req.body.userId)) {
                 sauce.usersDisliked.push(req.body.userId);
@@ -107,8 +105,7 @@ exports.likeOrDislike = (req, res, next) => {
             }
             break;
 
-        // Annule le like ou dislike
-        case 0:
+        case 0: // Annule le like ou dislike
             // Si le Like existe, on le retire pour l'utilisateur connecté.
             if (sauce.usersLiked.includes(req.body.userId)) {
                 index = sauce.usersLiked.indexOf(req.body.userId); // Récupère la position.
