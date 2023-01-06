@@ -18,6 +18,7 @@ exports.createSauce = (req, res, next) => {
         res.send(schema.validate(JSON.parse(req.body.sauce)).error.details);
     } else { // Sinon on ajoute la sauce
         const sauceObject = JSON.parse(req.body.sauce);
+        delete sauceObject.userId;
 
         const sauce = new Sauce({
             ...sauceObject,
@@ -108,31 +109,31 @@ exports.likeOrDislike = (req, res, next) => {
         switch (like) {        
         case 1: // Aujoute un Like
             // Si pas de like on ajoute
-            if (!sauce.usersLiked.includes(req.body.userId)) {
-                sauce.usersLiked.push(req.body.userId);
+            if (!sauce.usersLiked.includes(req.auth.userId)) {
+                sauce.usersLiked.push(req.auth.userId);
                 sauce.likes++;
             }
             break;
 
         case -1:// Ajoute un Dislike
             // Si pas de dislike on ajoute
-            if (!sauce.usersLiked.includes(req.body.userId)) {
-                sauce.usersDisliked.push(req.body.userId);
+            if (!sauce.usersLiked.includes(req.auth.userId)) {
+                sauce.usersDisliked.push(req.auth.userId);
                 sauce.dislikes++;
             }
             break;
 
         case 0: // Annule le like ou dislike
             // Si le Like existe, on le retire pour l'utilisateur connecté.
-            if (sauce.usersLiked.includes(req.body.userId)) {
-                index = sauce.usersLiked.indexOf(req.body.userId); // Récupère la position.
+            if (sauce.usersLiked.includes(req.auth.userId)) {
+                index = sauce.usersLiked.indexOf(req.auth.userId); // Récupère la position.
                 sauce.usersLiked.splice(index, 1);
                 sauce.likes--;
             }
 
             // Si le dislike existe, on le retire pour l'utilisateur connecté.
-            if (sauce.usersDisliked.includes(req.body.userId)) {
-                index = sauce.usersDisliked.indexOf(req.body.userId); // Récupère la position.
+            if (sauce.usersDisliked.includes(req.auth.userId)) {
+                index = sauce.usersDisliked.indexOf(req.auth.userId); // Récupère la position.
                 sauce.usersDisliked.splice(index, 1);
                 sauce.dislikes--;
             }

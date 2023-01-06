@@ -1,2 +1,2 @@
-npm install mongoose-unique-validator
-npm install bcrypt
+npm install
+npm start

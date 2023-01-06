@@ -9,7 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-
+mongoose.set('strictQuery', true);
 mongoose.connect(`mongodb+srv://Edains:${process.env.MONGOOSE_PASSWORD}@cluster0.fditcwk.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -41,3 +41,5 @@ app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
 
 module.exports = app;
+
+
